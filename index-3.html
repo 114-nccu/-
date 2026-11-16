@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>FX Hedging Copilot | 修正版互動原型 v4</title>
+  <style>
+    :root{--ink:#102849;--sub:#647792;--blue:#1c63c7;--cyan:#0b8dba;--teal:#08a68a;--green:#168052;--border:#dce6f2;--canvas:#f5f8fc;--shadow:0 12px 36px rgba(19,55,96,.07)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--canvas);font-family:Inter,-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);line-height:1.6}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #92d4ff;outline-offset:2px}
+    .nav{background:#fff;border-bottom:1px solid var(--border);position:relative;z-index:2}.nav-inner{max-width:1480px;margin:auto;padding:14px 30px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-weight:820;font-size:21px;color:#174776;letter-spacing:-.5px}.brand small{display:inline-block;font-size:15px;color:#418bc4;padding-left:14px;margin-left:12px;border-left:1px solid #cbdbea;letter-spacing:0}.nav-right{display:flex;align-items:center;gap:10px}.chip{border:1px solid #d5e6fb;background:#eff7ff;border-radius:99px;padding:5px 11px;color:#2b5f9d;font-size:12px;font-weight:700}.nav-pill{font-size:12px;color:#5d738d}
+    .hero{background:radial-gradient(circle at 87% 10%,#b4f4e787,transparent 35%),linear-gradient(115deg,#e7f2ff 0%,#f5faff 65%,#eafff8 100%);border-bottom:1px solid var(--border)}.hero-inner{max-width:1480px;margin:auto;padding:34px 30px 33px}.eyebrow{color:#2b6cae;font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-size:12px}.hero h1{font-size:clamp(27px,3.4vw,43px);line-height:1.22;letter-spacing:-1.2px;margin:8px 0 11px}.hero p{color:#506985;margin:0;max-width:980px}.hero-note{display:flex;flex-wrap:wrap;gap:9px;margin-top:17px}.hero-note span{font-size:12px;background:#ffffffbc;border:1px solid #d7e8f4;color:#55718e;border-radius:99px;padding:4px 10px}
+    .container{max-width:1480px;padding:24px 30px 54px;margin:auto;display:grid;grid-template-columns:340px minmax(0,1fr);align-items:start;gap:20px}.panel{border:1px solid var(--border);background:#fff;border-radius:19px;box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:17px 20px;border-bottom:1px solid #e7eef7;display:flex;align-items:center;justify-content:space-between;gap:12px}.panel-head h2{font-size:19px;margin:0;letter-spacing:-.3px}.panel-inner{padding:20px}.small{font-size:12px;color:#71849b}.form{display:grid;gap:12px}.field label{display:block;font-size:13px;color:#304d6d;font-weight:760;margin-bottom:5px}.field input,.field select{height:42px;display:block;width:100%;border:1px solid #cfddee;border-radius:10px;background:#fff;color:#243e60;padding:9px 11px;font-variant-numeric:tabular-nums}.field input::placeholder{color:#9bafc2}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.form-divider{border:0;border-top:1px dashed #d6e3f0;margin:3px 0}.helper{color:#7084a0;font-size:11px;margin-top:4px}.submit{width:100%;border:0;border-radius:11px;padding:12px;background:linear-gradient(95deg,#246ad4,#0db18c);color:#fff;font-weight:800;box-shadow:0 8px 15px #007dd72b}.examples{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sub-btn{background:#f5f9ff;color:#245b92;border:1px solid #d5e4f3;border-radius:10px;padding:9px 7px;font-size:12px;font-weight:700}.error{color:#a22929;background:#fff1f1;padding:10px 12px;border-radius:9px;font-size:13px;display:none}.error.show{display:block}
+    .content{display:grid;gap:18px;min-width:0}.notice{display:flex;gap:12px;align-items:flex-start;border:1px solid #bce3d4;border-radius:14px;background:#effbf5;padding:12px 16px;color:#17644c;font-size:13px}.notice b{display:block;color:#0b684d}.notice .bubble{height:28px;width:28px;min-width:28px;display:grid;place-items:center;background:#d5f6e5;border-radius:9px;font-weight:900}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:16px}.product{border:1px solid #dee8f4;border-radius:14px;padding:17px;min-width:0;background:#f7faff}.product.forward{background:#f1fcf6;border-color:#bce9cc}.product.option{background:#f3f7ff;border-color:#c6d9fb}.product.swap{background:#f8f9fc;border-color:#dce2ea}.product-title{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.product h3{font-size:17px;margin:0}.status{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:800}.good{background:#dcf8e5;color:#16804d}.okay{background:#e1edff;color:#205fab}.neutral{background:#e8ecf0;color:#627183}.product p{font-size:12px;color:#536a84;min-height:62px;margin:10px 0 13px}.metric-label{color:#71829a;font-size:11px}.metric{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.6px;white-space:nowrap}.green{color:#087744}.blue{color:#235dbb}.muted{color:#687990}.metric-note{font-size:11px;color:#657d94;margin-top:3px}.split{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.8fr);gap:18px}.svg-wrap{min-height:282px}svg{display:block;width:100%;height:auto}.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:#657a95}.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:9px 12px;border-bottom:1px solid #e9eff7;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}th:first-child,td:first-child{text-align:left}th{color:#71829a;font-weight:750;background:#f8faff}td:nth-child(3){color:#087744;font-weight:800}.section-note{margin-top:12px;color:#7285a0;font-size:11px}.summary{display:grid;gap:15px}.step{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#4c647f}.step .num{flex:none;background:#e7f1ff;color:#2268bb;border-radius:9px;font-weight:800;width:27px;height:27px;display:grid;place-items:center}.step b{color:#18385c}.summary-title{font-weight:780;margin-bottom:3px}.review-list{display:grid;gap:9px;margin-top:12px}.review-item{font-size:13px;display:flex;gap:8px;color:#42627b}.review-item .tick{font-weight:900;color:#11966a}.warning{background:#fffaf1;border:1px solid #f3dfb5;border-radius:12px;padding:12px 14px;color:#745c34;font-size:12px}.footer{max-width:1480px;margin:0 auto 40px;padding:0 30px;font-size:12px;color:#75869a}.flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.flow-item{padding:12px 8px;background:#f3f8ff;border:1px solid #d6e4f4;border-radius:11px;text-align:center;font-size:12px;color:#486987}.flow-item b{display:block;font-size:13px;color:#1d487a}.flow-item small{display:block;font-size:11px;margin-top:3px}
+    @media(max-width:1100px){.container{grid-template-columns:290px minmax(0,1fr);padding:18px}.cards{grid-template-columns:1fr}.product p{min-height:auto}.split{grid-template-columns:1fr}.flow{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:720px){.nav-inner{padding:12px 15px}.brand{font-size:17px}.brand small{font-size:12px;margin-left:7px;padding-left:8px}.nav-pill{display:none}.hero-inner{padding:26px 16px}.container{display:block;padding:16px}.content{margin-top:17px}.panel-head h2{font-size:17px}.metric{font-size:19px}.flow{grid-template-columns:repeat(2,minmax(0,1fr))}.footer{padding:0 17px}}
+  
+    .notice.error-state{border-color:#f2c4c4;background:#fff1f1;color:#9c2929}.notice.error-state b{color:#9c2929}.notice.error-state .bubble{background:#ffe0e0;color:#9c2929}
+    .quote-context{padding:11px 12px;border:1px solid #cddff1;background:#f6faff;border-radius:10px;color:#3d5876;font-size:12px;line-height:1.65}.quote-context.warn{border-color:#f0cd8b;background:#fff9e9;color:#795a23}.check-pass{color:#087c5c;font-weight:780}.check-fail{color:#b43131;font-weight:780}.review-item{align-items:flex-start}.status.good,.status.okay{transition:background .2s ease}.chart-kink-label{font-size:11px;fill:#8a6a27}.micro{font-size:11px;color:#6d829c;margin:5px 0 0}.muted-alert{font-size:12px;color:#7a5a27}
+  </style>
+</head>
+<body>
+<header class="nav"><div class="nav-inner"><div class="brand">◈ Derivatives Academy <small>AI Hedging Lab</small></div><div class="nav-right"><span class="nav-pill">期末專案概念驗證</span><span class="chip">OFFLINE DEMO</span></div></div></header>
+<section class="hero"><div class="hero-inner"><div class="eyebrow">CORPORATE TREASURY · PROTOTYPE</div><h1>FX Hedging Copilot <span style="color:#3377ad">｜</span> AI 企業外匯避險助手</h1><p>輸入假設企業曝險與市場報價，立即試算 Forward、FX Option 在不同到期匯率下的現金流，並展示金融知識檢查與避險邏輯。</p><div class="hero-note"><span>單一 HTML · 無須安裝</span><span>假設報價 · 非即時市場資料</span><span>互動計算已實作</span><span>LLM / RAG 為後續規劃</span></div></div></section>
+<main class="container">
+<aside class="panel">
+ <div class="panel-head"><h2>企業情境輸入</h2><span class="small">可編輯</span></div>
+ <div class="panel-inner"><form class="form" id="hedgeForm">
+   <div class="field"><label for="direction">企業曝險</label><select id="direction"><option value="receive">出口商｜未來收到 USD</option><option value="pay">進口商｜未來支付 USD</option></select></div>
+   <div class="field"><label for="notional">曝險金額（USD）</label><input type="number" id="notional" min="1" step="1" value="1000000" required></div>
+   <div class="field"><label for="tenor">預計收付天期</label><select id="tenor"><option value="1">1 個月</option><option value="3" selected>3 個月</option><option value="6">6 個月</option><option value="12">12 個月</option></select></div>
+   <div class="field"><label for="objective">主要避險目標</label><select id="objective"><option value="fixed">鎖定未來收付金額</option><option value="flex">願付權利金，保留有利匯率空間</option></select></div>
+   <hr class="form-divider">
+   <div class="two"><div class="field"><label for="spot">即期 USD/TWD</label><input type="number" id="spot" min="0.001" step="0.001" value="31.5" required></div><div class="field"><label for="forward">遠期 USD/TWD</label><input type="number" id="forward" min="0.001" step="0.001" value="31.2" required></div></div>
+   <div class="two"><div class="field"><label for="strike">選擇權履約價</label><input type="number" id="strike" min="0.001" step="0.001" value="31.3" required></div><div class="field"><label for="premium">選擇權權利金</label><input type="number" id="premium" min="0" step="0.01" value="0.2" required></div></div>
+   <div class="helper">權利金單位為 TWD／USD；假設相同名目本金、相同到期日、歐式且到期現金結算。忽略資金成本與交易費用。</div>
+   <div id="quoteContext" class="quote-context" role="status">遠期匯率及權利金由使用者依所選天期輸入。切換天期不會自動產生市場報價。</div>
+   <div id="error" class="error" role="alert"></div>
+   <button class="submit" type="submit">✦　開始避險情境分析</button>
+   <div class="examples"><button class="sub-btn" type="button" id="expPreset">載入出口商範例</button><button class="sub-btn" type="button" id="impPreset">載入進口商範例</button></div>
+ </form></div>
+</aside>
+<section class="content">
+ <div class="notice" id="reviewNotice"><span class="bubble" id="reviewSymbol">✓</span><div><b id="reviewHeading">規則型測試尚未執行</b><span id="reviewBanner">目前只會做輸入檢查與簡化公式測試，尚未使用 LLM Reflection。</span></div></div>
+ <article class="panel"><div class="panel-head"><h2>避險方案比較</h2><span class="small">以下全部為假設報價</span></div><div class="cards">
+   <div class="product forward"><div class="product-title"><h3>FX Forward</h3><span class="status good" id="forwardStatus">符合鎖匯目標</span></div><p id="forwardDesc">鎖定未來匯率，確定新台幣收款金額。</p><div class="metric-label" id="forwardLabel">鎖定收款（TWD）</div><div class="metric green" id="forwardAmount">31,200,000</div><div class="metric-note">固定匯率；不需另付選擇權權利金</div></div>
+   <div class="product option"><div class="product-title"><h3>FX Option</h3><span class="status okay" id="optionStatus">可比較</span></div><p id="optionDesc">買入美元賣權（USD Put），保留下檔保護及美元升值空間。</p><div class="metric-label" id="optionLabel">最低收款（扣權利金，TWD）</div><div class="metric blue" id="optionAmount">31,100,000</div><div class="metric-note" id="optionExtra">權利金合計 TWD 200,000</div></div>
+   <div class="product swap"><div class="product-title"><h3>FX Swap</h3><span class="status neutral">本情境不優先</span></div><p>同時涉及近端與遠端兩腿換匯，適合不同交割日間的幣別資金調度；單筆未來收付通常不是直接替代方案。</p><div class="metric-label">目前條件</div><div class="metric muted" style="font-size:16px">缺少近端現金流</div><div class="metric-note">若加入近端換匯需求再進行兩腿試算</div></div>
+ </div></article>
+ <div class="split">
+  <article class="panel"><div class="panel-head"><h2>不同到期匯率下的現金流</h2><span class="small">互動計算</span></div><div class="panel-inner"><div class="legend"><span><i style="background:#2774dd"></i>未避險</span><span><i style="background:#10a076"></i>Forward</span><span><i style="background:#f18333"></i>Option（淨額）</span></div><div class="svg-wrap"><svg id="payoff" viewBox="0 0 660 285" role="img" aria-label="未避險、遠期與選擇權的到期現金流比較圖"></svg></div><div class="table-wrap"><table><thead><tr><th>到期 USD/TWD</th><th id="colPlain">未避險收款</th><th>Forward</th><th>Option（淨額）</th></tr></thead><tbody id="scenarioRows"></tbody></table></div><div class="section-note" id="chartNote">比較各方案在相同到期匯率下的新台幣現金流；數字為 TWD 百萬元。</div></div></article>
+  <article class="panel"><div class="panel-head"><h2>分析摘要與驗證</h2><span class="small">規則型模擬</span></div><div class="panel-inner"><div class="summary" id="analysisSummary"></div><div class="warning" style="margin-top:20px"><b>模擬版本說明</b><br>此頁已實作數值計算、情境比較和固定規則審查；AI Agent、RAG、LLM Reflection 尚未連線，不能將本頁描述成已具備自動生成式 AI 分析能力。</div></div></article>
+ </div>
+ <article class="panel"><div class="panel-head"><h2>規劃中的 Agent 工作流程</h2><span class="small">正式專案開發藍圖</span></div><div class="panel-inner"><div class="flow"><div class="flow-item"><b>① 使用者輸入</b><small>企業曝險＋報價</small></div><div class="flow-item"><b>② Risk Agent</b><small>辨識曝險方向</small></div><div class="flow-item"><b>③ RAG 檢索</b><small>查商品教材</small></div><div class="flow-item"><b>④ Tool Use</b><small>金融現金流計算</small></div><div class="flow-item"><b>⑤ Reflection</b><small>檢查後輸出</small></div></div></div></article>
+</section>
+</main>
+<footer class="footer">FX Hedging Copilot｜教學概念驗證 · 所有報價皆為假設值 · 非投資建議、非銀行報價 · 本頁可離線操作，無外部 API。</footer>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const fmt=n=>new Intl.NumberFormat('zh-TW',{maximumFractionDigits:0}).format(n);
+const mfmt=n=>(n/1e6).toFixed(2)+'M';
+const f3=n=>Number(n).toFixed(3);
+function readInputs(){
+  const out={direction:$('direction').value,objective:$('objective').value,tenor:+$('tenor').value,notional:+$('notional').value,spot:+$('spot').value,forward:+$('forward').value,strike:+$('strike').value,premium:+$('premium').value};
+  if(![out.notional,out.spot,out.forward,out.strike,out.premium].every(Number.isFinite) || !(out.notional>0 && out.spot>0 && out.forward>0 && out.strike>0 && out.premium>=0)) throw Error('請確認金額與匯率皆大於 0，且權利金不得為負數。');
+  return out;
+}
+function calc(c,s){
+  const n=c.notional;
+  const plain=n*s, fwd=n*c.forward;
+  // 收 USD 的出口商：購入 USD Put，取得 max(K-S,0) 的匯率保護。
+  // 付 USD 的進口商：購入 USD Call，取得 max(S-K,0) 的匯率保護。
+  const opt = c.direction==='receive' ? n*(Math.max(s,c.strike)-c.premium) : n*(Math.min(s,c.strike)+c.premium);
+  return {plain,fwd,opt};
+}
+function escapeTxt(v){return String(v).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));}
+function uniqueSorted(values){
+  return [...new Set(values.filter(v=>Number.isFinite(v)&&v>0).map(v=>Math.round(v*1e6)/1e6))].sort((a,b)=>a-b);
+}
+function drawChart(c){
+  // 履約價 K 是選擇權現金流曲線的折點。遠期 F 也列為資料取樣點。
+  const important=[c.spot,c.forward,c.strike];
+  const lo=Math.max(.001,Math.min(...important)-Math.max(.7,c.spot*.035));
+  const hi=Math.max(...important)+Math.max(.7,c.spot*.035);
+  const ticks=Array.from({length:5},(_,i)=>lo+(hi-lo)*i/4);
+  const xs=uniqueSorted([...ticks,...important]);
+  const all=xs.map(x=>calc(c,x));
+  const vals=all.flatMap(o=>[o.plain,o.fwd,o.opt]);
+  let low=Math.min(...vals),high=Math.max(...vals);
+  const pad=Math.max((high-low)*.16,c.notional*.035);
+  low=low-pad; high=high+pad;
+  const x0=58,x1=630,y0=31,y1=239;
+  const X=x=>x0+(x-lo)/(hi-lo)*(x1-x0);
+  const Y=n=>y1-(n-low)/(high-low)*(y1-y0);
+  let svg='';
+  for(let j=0;j<=4;j++){
+    const v=low+(high-low)*j/4,y=Y(v);
+    svg+=`<line x1="${x0}" x2="${x1}" y1="${y}" y2="${y}" stroke="#e7edf5"/>`;
+    svg+=`<text x="${x0-9}" y="${y+4}" fill="#70839b" text-anchor="end" font-size="12">${(v/1e6).toFixed(1)}</text>`;
+  }
+  ticks.forEach(v=>svg+=`<text x="${X(v)}" y="${y1+19}" fill="#70839b" text-anchor="middle" font-size="12">${v.toFixed(2)}</text>`);
+  const kinkX=X(c.strike);
+  svg+=`<line x1="${kinkX}" y1="${y0+6}" x2="${kinkX}" y2="${y1}" stroke="#eab676" stroke-dasharray="4 5" opacity=".9"/>`;
+  svg+=`<text x="${Math.max(88,Math.min(580,kinkX))}" y="${y0-11}" class="chart-kink-label" text-anchor="middle">K=${f3(c.strike)}（轉折）</text>`;
+  const series=[{key:'plain',color:'#2774dd'},{key:'fwd',color:'#10a076'},{key:'opt',color:'#f18333'}];
+  for(const q of series){
+    svg+=`<polyline points="${xs.map((x,i)=>`${X(x)},${Y(all[i][q.key])}`).join(' ')}" fill="none" stroke="${q.color}" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" ${q.key==='fwd'?'stroke-dasharray="8 5"':''}/>`;
+    const dotXs=uniqueSorted([c.strike,c.forward,c.spot]);
+    dotXs.forEach(x=>svg+=`<circle cx="${X(x)}" cy="${Y(calc(c,x)[q.key])}" r="4.3" fill="${q.color}" stroke="white" stroke-width="1.4"><title>${q.key} @ ${f3(x)}: TWD ${fmt(calc(c,x)[q.key])}</title></circle>`);
+  }
+  svg+=`<text x="${(x0+x1)/2}" y="283" font-size="12" fill="#667b94" text-anchor="middle">到期 USD/TWD</text><text x="16" y="18" font-size="11" fill="#72839a">TWD 百萬</text>`;
+  $('payoff').innerHTML=svg;
+  // 表格同時呈現平價點、履約價、遠期報價及上下情境；避免誤畫 Payoff 折角。
+  const grid=uniqueSorted([Math.max(.001,c.spot-.6),c.strike,c.forward,c.spot,c.spot+.6]);
+  $('scenarioRows').innerHTML=grid.map(x=>{
+    const r=calc(c,x);
+    return `<tr><td>${f3(x)}${Math.abs(x-c.strike)<1e-6?' (K)':''}</td><td>${mfmt(r.plain)}</td><td>${mfmt(r.fwd)}</td><td>${mfmt(r.opt)}</td></tr>`;
+  }).join('');
+}
+function actualRuleChecks(c){
+  const n=c.notional,k=c.strike,eps=Math.min(.1,k/4),l=Math.max(.001,k-eps),r=k+eps;
+  const a=calc(c,l),b=calc(c,k),d=calc(c,r);
+  const eq=(x,y)=>Math.abs(x-y)<=Math.max(0.0001,Math.abs(y)*1e-10);
+  const recv=c.direction==='receive';
+  return [
+    {name:'遠期收付金額固定',ok:eq(a.fwd,b.fwd)&&eq(b.fwd,d.fwd)&&eq(b.fwd,n*c.forward), detail:'不同到期匯率下，遠期計算金額不變'},
+    {name:recv?'USD Put 保護收款下限':'USD Call 限制最高支付',ok:recv?(eq(a.opt,n*(k-c.premium))&&eq(b.opt,n*(k-c.premium))&&d.opt>=b.opt):(eq(b.opt,n*(k+c.premium))&&eq(d.opt,n*(k+c.premium))&&a.opt<=b.opt),detail:recv?'檢查履約價以下保護及以上參與':'檢查履約價以上封頂及以下參與'},
+    {name:'曝險風險方向',ok:recv?calc(c,c.spot).plain>calc(c,Math.max(.001,c.spot-.1)).plain:calc(c,c.spot+.1).plain>calc(c,c.spot).plain,detail:recv?'USD/TWD 下跌會降低未避險收款':'USD/TWD 上漲會增加未避險支付'}
+  ];
+}
+function render(){
+ try{
+  const c=readInputs(), recv=c.direction==='receive', n=c.notional,prem=n*c.premium;
+  $('error').classList.remove('show');
+  $('reviewNotice').classList.remove('error-state');
+  $('quoteContext').classList.remove('warn');
+  $('forwardLabel').textContent=recv?'鎖定新台幣收款':'鎖定新台幣支付';
+  $('forwardDesc').textContent=recv?'提前約定賣出 USD，固定未來可收到的新台幣金額。':'提前約定買入 USD，固定未來需要支付的新台幣金額。';
+  $('forwardAmount').textContent=fmt(n*c.forward);
+  $('optionLabel').textContent=recv?'最低淨收款（TWD）':'最高淨支付（TWD）';
+  $('optionDesc').textContent=recv?'買入 USD Put，防止美元貶值，同時保留美元升值所增加的收入。':'買入 USD Call，防止美元升值增加成本，同時保留美元貶值的有利效果。';
+  $('optionAmount').textContent=fmt(n*(recv?c.strike-c.premium:c.strike+c.premium));
+  $('optionExtra').textContent=`權利金總額 TWD ${fmt(prem)}（本示範未折現）`;
+  $('colPlain').textContent=recv?'未避險收款':'未避險支付';
+  $('chartNote').textContent=`${c.tenor} 個月後：${recv?'出口商收到美元':'進口商支付美元'}，表格數字為新台幣${recv?'收款':'支付'}金額（百萬元）。Option 已${recv?'扣除':'加上'}權利金。橘線在履約價 K=${f3(c.strike)} 有轉折。`;
+  const forwardAnnual=(c.forward/c.spot-1)*12/c.tenor*100;
+  const annualStr=`${forwardAnnual>0?'+':''}${forwardAnnual.toFixed(2)}%`;
+  $('quoteContext').innerHTML=`<b>報價天期：${c.tenor} 個月</b>｜遠期差額 ${f3(c.forward-c.spot)} TWD/USD｜簡單年化遠期升貼水 ${annualStr}<div class="micro">採用你手動輸入的 ${c.tenor}M 遠期匯率與權利金。變更天期不會自動重新報價；請輸入對應天期的假設價格。年化遠期升貼水僅為示意，不等於精確利差或市場預測。</div>`;
+  const preferred=c.objective==='fixed'?'Forward':'Option';
+  for(const [id,isPreferred] of [['forwardStatus',preferred==='Forward'],['optionStatus',preferred==='Option']]){
+    const el=$(id);el.textContent=isPreferred?'較符合所選目標':'可比較';el.className='status '+(isPreferred?'good':'okay');
+  }
+  const signal=recv?'USD/TWD 下跌':'USD/TWD 上漲',noun=recv?'收款金額減少':'採購成本增加';
+  const ruleResults=actualRuleChecks(c),count=ruleResults.filter(x=>x.ok).length,passed=count===ruleResults.length;
+  $('analysisSummary').innerHTML=`
+   <div class="step"><span class="num">1</span><div><div class="summary-title">外匯曝險方向</div>${recv?'出口商將收到':'進口商將支付'} USD ${fmt(n)}，天期 ${c.tenor} 個月；當 ${signal} 時，${noun}，因此須管理${recv?'美元貶值':'美元升值'}風險。</div></div>
+   <div class="step"><span class="num">2</span><div><div class="summary-title">商品與避險方向</div>Forward：${recv?'賣出':'買入'}美元遠期，匯率 ${f3(c.forward)}。Option：買入 <b>USD ${recv?'Put':'Call'}</b>，履約價 ${f3(c.strike)}，權利金 TWD ${fmt(prem)}。</div></div>
+   <div class="step"><span class="num">3</span><div><div class="summary-title">依避險目標進行比較</div>你選擇「${c.objective==='fixed'?'鎖定未來收付金額':'保留有利匯率變動空間'}」，因此優先觀察 <b>${preferred}</b>。此標示僅依使用者偏好調整，不代表已比較全部交易成本、流動性或交易對手條件。</div></div>
+   <div class="review-list"><div class="summary-title">已執行的 JavaScript 公式一致性檢查 (${count}/${ruleResults.length})</div>${ruleResults.map(q=>`<div class="review-item"><span class="${q.ok?'check-pass':'check-fail'}">${q.ok?'✓':'✕'}</span><span><b>${escapeTxt(q.name)}</b>：${escapeTxt(q.detail)}</span></div>`).join('')}</div>`;
+  $('reviewHeading').textContent=passed?`規則測試通過（${count}/${ruleResults.length}）`:`規則測試未通過（${count}/${ruleResults.length}）`;
+  $('reviewSymbol').textContent=passed?'✓':'!';
+  $('reviewBanner').textContent='輸入有效性由欄位檢查處理；此處是 3 項程式公式一致性檢查，並非獨立金融驗證或 LLM Reflection。';
+  drawChart(c);
+ }catch(err){
+  $('error').textContent=err.message;$('error').classList.add('show');
+  $('reviewNotice').classList.add('error-state');
+  $('reviewHeading').textContent='輸入無效，未完成本次計算';
+  $('reviewSymbol').textContent='!';
+  $('reviewBanner').textContent='本次計算無效；所有動態結果已清空，請修正輸入欄位後重新分析。';
+  // Clear EVERY previous result, including the product cards, labels and tenor context.
+  for(const id of ['forwardDesc','forwardLabel','forwardAmount','optionDesc','optionLabel','optionAmount','optionExtra','colPlain','chartNote']){
+    $(id).textContent='—';
+  }
+  for(const id of ['forwardStatus','optionStatus']){
+    $(id).textContent='尚無有效結果';
+    $(id).className='status neutral';
+  }
+  $('quoteContext').textContent='輸入無效：天期與遠期升貼水試算暫停顯示，請修正報價與金額。';
+  $('quoteContext').classList.add('warn');
+  $('payoff').innerHTML='';$('scenarioRows').innerHTML='';
+  $('analysisSummary').textContent='請修正輸入欄位，重新執行分析。';
+ }
+}
+$('hedgeForm').addEventListener('submit',e=>{e.preventDefault();render();});
+$('hedgeForm').addEventListener('change',()=>render());
+$('hedgeForm').addEventListener('input',()=>render());
+$('expPreset').addEventListener('click',()=>{const d={direction:'receive',notional:1000000,tenor:3,objective:'fixed',spot:31.5,forward:31.2,strike:31.3,premium:.2};for(const[k,v]of Object.entries(d))$(k).value=v;render();});
+$('impPreset').addEventListener('click',()=>{const d={direction:'pay',notional:850000,tenor:6,objective:'flex',spot:31.5,forward:30.9,strike:31.7,premium:.25};for(const[k,v]of Object.entries(d))$(k).value=v;render();});
+render();
+</script>
+</body>
+</html>
